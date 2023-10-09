@@ -3,6 +3,7 @@ import tkinter.messagebox
 import customtkinter, webbrowser
 from PIL import Image
 from tkinter import filedialog
+from check import check_existence
 
 customtkinter.set_appearance_mode("Dark")  
 customtkinter.set_default_color_theme("green")  
@@ -37,17 +38,17 @@ class App(customtkinter.CTk):
         self.tabview1.grid(row=1, column=1, padx=(10, 0), pady=(20, 0), sticky="nsew")
         self.progressbar_1 = customtkinter.CTkProgressBar(self, width=450)
         self.progressbar_1.grid(row=1, column=1, padx=(0, 0), pady=(0, 400))
-        self.tabview1.add("Output")
+        # self.tabview1.add("Output")
         self.tabview1.add("Valid Emails")
         self.tabview1.add("Invalid Emails")
-        self.tabview1.tab("Output").grid_columnconfigure(0, weight=10) 
+        # self.tabview1.tab("Output").grid_columnconfigure(0, weight=10) 
         self.tabview1.tab("Valid Emails").grid_columnconfigure(1, weight=10)  
         self.tabview1.tab("Invalid Emails").grid_columnconfigure(2, weight=10)
-        self.textbox = customtkinter.CTkTextbox(self.tabview1.tab("Output"), width=500, height=400, state='disabled')
-        self.textbox.grid(row=1, column=1, padx=(0, 40), pady=(50, 0), sticky="nsew")
-        self.textbox2 = customtkinter.CTkTextbox(self.tabview1.tab("Valid Emails"), width=500, height=400, state='disabled')
+        # self.textbox = customtkinter.CTkTextbox(self.tabview1.tab("Output"), width=500, height=400, state='disabled', fg_color="green")
+        # self.textbox.grid(row=1, column=1, padx=(0, 40), pady=(50, 0), sticky="nsew")
+        self.textbox2 = customtkinter.CTkTextbox(self.tabview1.tab("Valid Emails"), width=500, height=400, state='disabled', text_color="green")
         self.textbox2.grid(row=1, column=1, padx=(25, 40), pady=(50, 0), sticky="nsew")
-        self.textbox3 = customtkinter.CTkTextbox(self.tabview1.tab("Invalid Emails"), width=500, height=400, state='disabled')
+        self.textbox3 = customtkinter.CTkTextbox(self.tabview1.tab("Invalid Emails"), width=500, height=400, state='disabled', text_color="red")
         self.textbox3.grid(row=1, column=1, padx=(30, 25), pady=(50, 0), sticky="nsew")
 
         self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
@@ -81,10 +82,13 @@ class App(customtkinter.CTk):
         self.image_button_settings.grid(row=2, column=0, padx=20, pady=(10, 10))
         self.image_button_settings = customtkinter.CTkButton(self.tabview.tab("Settings"), text="valid(.txt)", image=photo_settings, compound="left", command=self.select_file2)
         self.image_button_settings.grid(row=3, column=0, padx=20, pady=(10, 10))
+        self.image_button_settings = customtkinter.CTkButton(self.tabview.tab("Settings"), text="invalid(.txt)", image=photo_settings, compound="left", command=self.select_file2)
+        self.image_button_settings.grid(row=4, column=0, padx=20, pady=(10, 10))
         # self.selected_file_label = customtkinter.CTkLabel(self.tabview.tab("Settings"), text="  Usernames: None")
         # self.selected_file_label.grid(row=3, column=0, padx=20, pady=(0, 10))
 
         self.selected_file_path2 = None
+        self.selected_file_path3 = None
         self.selected_file_path = None
         self.threads_entry.configure(validate="key", validatecommand=(self.validate_number, "%P"))
         self.domain_select = customtkinter.CTkOptionMenu(self.tabview.tab("Settings"), dynamic_resizing=False,
@@ -112,15 +116,47 @@ class App(customtkinter.CTk):
         if file_path:
             self.selected_file_path2 = file_path
 
+    def select_file3(self):
+        file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
+
+        if file_path:
+            self.selected_file_path3 = file_path
+
     def start_button(self):
         self.progressbar_1.start()
         file_path = rf"{self.selected_file_path}"
         threads = self.threads_entry.get()
         domain = self.domain_select.get()
-        self.textbox.configure(state='normal')
-        self.textbox.delete('1.0', 'end')
-        self.textbox.insert('end', f"Selected File: {file_path}\nThreads: {threads}\nDomain: {domain}\n Valid(.txt): {self.selected_file_path2}\n")
-        self.textbox.configure(state='disabled')
+        
+        usernames = []
+        if self.selected_file_path:
+            with open(self.selected_file_path, 'r') as file:
+                usernames = file.read().split('\n')
+                
+        
+        self.textbox2.configure(state='normal')
+        self.textbox2.delete('1.0', 'end')
+        self.textbox2.insert('end', f"Selected File: {file_path}\nThreads: {threads}\nDomain: {domain}\n")
+        self.textbox2.insert('end', "----------------------\n \n")
+        self.textbox3.configure(state='normal')
+        self.textbox3.delete('1.0', 'end')
+        self.textbox3.insert('end', f"Selected File: {file_path}\nThreads: {threads}\nDomain: {domain}\n")
+        self.textbox3.insert('end', "----------------------\n \n")
+    
+        for username in usernames:
+            validity = check_existence(f'{username}')
+            if validity:
+                self.textbox2.insert('end', username + f" ::---------::> {validity}" + "\n", 'green_text')
+                with open(self.selected_file_path2, 'a') as valid_file:
+                    valid_file.write(str(username) + '\n')
+            else:
+                self.textbox3.insert('end', username + f" ::---------::> {validity}" + "\n",'red_text')
+                with open(self.selected_file_path3, 'a') as invalid_file:
+                    invalid_file.write(str(username) + '\n')
+                
+        self.textbox2.configure(state='disabled')
+        self.textbox3.configure(state='disabled')
+
 
 
     def stop_button(self):
