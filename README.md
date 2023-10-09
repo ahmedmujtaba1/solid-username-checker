@@ -11,10 +11,7 @@ GitHub Username Checker is a simple tool for verifying the existence of an email
 ## Usage
 
 1. Clone this repository.
-2. Run the `main.py` file.
+2. Run the `app.py` file.
 3. Enter the email address you want to check.
 4. Click the "Check" button.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
