@@ -1,6 +1,4 @@
-import tkinter
-import tkinter.messagebox
-import customtkinter, webbrowser
+import customtkinter, webbrowser, re, tkinter.messagebox
 from PIL import Image
 from tkinter import filedialog
 from check import check_existence
@@ -82,7 +80,7 @@ class App(customtkinter.CTk):
         self.image_button_settings.grid(row=2, column=0, padx=20, pady=(10, 10))
         self.image_button_settings = customtkinter.CTkButton(self.tabview.tab("Settings"), text="valid(.txt)", image=photo_settings, compound="left", command=self.select_file2)
         self.image_button_settings.grid(row=3, column=0, padx=20, pady=(10, 10))
-        self.image_button_settings = customtkinter.CTkButton(self.tabview.tab("Settings"), text="invalid(.txt)", image=photo_settings, compound="left", command=self.select_file2)
+        self.image_button_settings = customtkinter.CTkButton(self.tabview.tab("Settings"), text="invalid(.txt)", image=photo_settings, compound="left", command=self.select_file3)
         self.image_button_settings.grid(row=4, column=0, padx=20, pady=(10, 10))
         # self.selected_file_label = customtkinter.CTkLabel(self.tabview.tab("Settings"), text="  Usernames: None")
         # self.selected_file_label.grid(row=3, column=0, padx=20, pady=(0, 10))
@@ -123,6 +121,8 @@ class App(customtkinter.CTk):
             self.selected_file_path3 = file_path
 
     def start_button(self):
+        print("Valid File TXT Path : ", self.selected_file_path2)
+        print("Invalid File TXT Path : ", self.selected_file_path3)
         self.progressbar_1.start()
         file_path = rf"{self.selected_file_path}"
         threads = self.threads_entry.get()
@@ -142,21 +142,31 @@ class App(customtkinter.CTk):
         self.textbox3.delete('1.0', 'end')
         self.textbox3.insert('end', f"Selected File: {file_path}\nThreads: {threads}\nDomain: {domain}\n")
         self.textbox3.insert('end', "----------------------\n \n")
+        self.textbox3.update_idletasks()
+        def is_valid_email(email):
+            pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+            return re.match(pattern, email)
     
         for username in usernames:
-            validity = check_existence(f'{username}')
+            if not is_valid_email(username):
+                validity = "Invalid email syntax"
+            else:
+                validity = check_existence(f'{username}')
+                # validity = False
             if validity:
                 self.textbox2.insert('end', username + f" ::---------::> {validity}" + "\n", 'green_text')
+                self.progressbar_1.stop()
+                self.textbox2.update_idletasks()
                 with open(self.selected_file_path2, 'a') as valid_file:
                     valid_file.write(str(username) + '\n')
             else:
                 self.textbox3.insert('end', username + f" ::---------::> {validity}" + "\n",'red_text')
+                self.textbox3.update_idletasks()
                 with open(self.selected_file_path3, 'a') as invalid_file:
                     invalid_file.write(str(username) + '\n')
                 
         self.textbox2.configure(state='disabled')
         self.textbox3.configure(state='disabled')
-
 
 
     def stop_button(self):

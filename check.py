@@ -13,6 +13,7 @@ def check_existence(email:str) -> bool:
 
     status_code = response.status_code
     result = response.json()
-    return result['smtp_check']
+    # print("Results : ", result)
+    return result['mx_found']
 
-print(check_existence('ahmedkdjkddodikolk@mail.com'))
+# print(check_existence('ahmedkdjkddodikolk@mail.com'))

@@ -1,12 +1,19 @@
-
 import requests
 
+headers = {
+    "Accept" : "application/json, text/plain, */*",
+    "Accept-Encoding" : "gzip, deflate, br",
+    "Accept-Language" : "en-US,en;q=0.9",
+    "Content-Type" : "application/json",
+    "Cache-Control" : "no-cache",
+    "Connection" : "keep-alive",
+    "Content-Length" : "289",
+    "Cookie" : "euconsent-v2=CPzU2oAPzU2oAAcABBENDaCsAP_AAAAAAAYgJnJd9H7fbXFjef5_aft0eY0X1dB76-QjDhTAk-AF3JuQ8LwG12E6METApqgCERIgolZBIQMEHEFUAFCQYIAFAQHsIkSUpAAKICDEEBEQAAIQAAoKEgIAEAAIgERHIhWAmBiQ69LkxcCAGIAQB0BYgogBCIBBAgMBBUAIQBgIAIIIwygAAQBAAIIAAAAAATAAAgBDQAAAIAEAAAHwAAAJBIIIACAAFwAUABUADkAHgAgABlADQANQAeQBDAEQAJgATwAqgBmADeAHoAPwAhIBDAEQAI4ASwAmgBSgC3AGAAMMAZYA54B3AHeAPaAfYB-gEDAIoARgAjQBJQCUgFPALmAYoA1gBtADcAHEAQ6Aj0BIgCdgFDgKPAUiAtABbAC8wGDAMNgZGBkgDMwGfQNYA1kBwQDlAHjgQ5AkVBMsEzAgBEABwAJAAfgBHAE4AOYAg4BHACaAE7ASsAqEBf4DFgGQgP3AmaGAAgDmDQBgCCgFPANYAh0BnwDlBAAEAcwiAKAU8A1gCHQGfAOUFQAwAhgM-AcoKABADmAIKMgBgBDAZ8A5QYABAHMOARgAIAAcABcAEgAPwAjgBQADQAI6AcgBzADoAILAQcBCACIgEcAJoATsApYBrADyAIQASsAqEBaAC1AF0AL_AYIAxYBkMD9gP3AkIBMMCZYEzR0EwABcAFAAVAA5AB8AIAAXAAygBoAGoAPIAhgCIAEwAJ4AVYAuAC6AGIAMwAbwA9AB-gEMARAAlgBNACcAFGAKUAWIAtwBgADDAGiAOeAdwB3gD2gH2AfoBAwCKAEWAIwAR0AkoBKQCngFiALmAXkAxQBtADcAHEAOcAdQBDoCLwEegJEATsAocBR4C2AFugLzAYMAw2BkYGSAMqAZYAzMBnwDWAHFgOUAeOA-sCAIEOQJFATMIADAAEABogHIAcwBBQCOAFLALEAwQB-wEMwJhgTNIQIAAFgAUABcADUAIYATAAqgBcADEAG8APQAjgBSgCxAGAAOeAdwB3gEUAJKASkAp4BcwDFAG0AOcAdQBHoDIwGfAOUAeOBIolAjAAQAAsACgAHAAPgA8ACIAEwAKoAXAAxQCGAIgARwAowBbgDAAHeAPwAp4BcwDFAHUAQ6Ai8BHoCRAFHgLYAXnAyMDJAGfANYAgCBIqCZYJmEgB4AFwAjgDmAHcAQcAjgBSwDtgJWAX-AxYBlgD9wIZgTNKQOAAFwAUABUADkAHwAggBoAGoAPIAhgCIAEwAJ4AUgAqgBiADMAH6AQwBEACjAFKALEAW4AwABogDnAHfAPwA_QCLAEYAI6ASUAlIBcwC8gGKANoAbgA6gCHQEXgI9ASIAnYBQ4C0AFsALzAYbAyMDJAGWAM-gawBrIDggHKAPHAhmBDkCRQEzCgBkAC4AJAAXAAyAB-AEcARwAnIByAHMAO4AfYBBwClgFiALqAa8A7YB5AD_gLoAYIAxaB-wH7gTLAma.f_gAAAAAAdAA; idcc=1; consentLevel=3; uiconsent={%22permissionFeature%22:[%22fullConsent%22]}; cookieKID=kid%40autoref%40www.google.com; cookiePartner=kid%40autoref%40www.google.com; wa=c347eb48865566cefbb20c781d56fd62; _ga=GA1.1.1555819844.1696766130; _autuserid2=7271523363209279639; ua_id=46d4350f-7912-4dcd-82a2-300bdb80b6df; NGUserID=BMIf42EA-223-1696766180-0; __gads=ID=fea84beff9c1820d:T=1696766132:RT=1696863151:S=ALNI_MYcS5aFWKvyYyaJ3gbv1JQw1c1Ywg; __gpi=UID=00000cb913c74cb7:T=1696766132:RT=1696863151:S=ALNI_MYm3N9K1mmpuh7vLiuPsK0rmPQ-8Q; AB_COOKIE=B; utag_main=v_id:018b0f248c02001bb7376953b41e0506f0031067007e8$_sn:2$_se:1$_ss:1$_st:1696864954089$ses_id:1696863154089%3Bexp-session$_pn:1%3Bexp-session; _ga_KQBDKX3D3N=GS1.1.1696863150.2.1.1696863403.0.0.0"
+}
 
-def check_email(email):
-    api_keys = ["eb575a764e044b8d9716922b470e500e",]
-    response = requests.get(f"https://emailvalidation.abstractapi.com/v1/?api_key=&email={email}")
-    print(response.status_code)
-    r = response.json()
-    return r["is_smtp_valid"]["value"]
+formdata = {
+    "emailAddress" : "pagal4@gmx.com"
+}
 
-check_email('ahmed@gmx.com')
+r = requests.post("https://signup.gmx.com/suggest/rest/email-alias/availability", headers=headers, data=formdata)
+print(r.content)
