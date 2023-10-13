@@ -17,7 +17,7 @@ def check_existence(email:str) -> bool:
             flag = True
 
     else:
-        api_lists = ["tQReT8Z7OINfadZ0qCv0N", "EWPfWcivWhA1T31WAJGfg", "hoq34RmyHE6Cqp9sQ0MYs"]
+        api_lists = ''''' your list of apis here '''
         r = requests.get(f"https://apps.emaillistverify.com/api/verifEmail?secret={random.choice(api_lists)}&email={email}")
         if "ok" in str(r.content):
             flag = True
