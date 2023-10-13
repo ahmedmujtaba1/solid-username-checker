@@ -1,11 +1,30 @@
-import customtkinter, webbrowser, re, tkinter.messagebox
+import customtkinter, webbrowser, re, requests, random
 from PIL import Image
 from tkinter import filedialog
-from check import check_existence
 
 customtkinter.set_appearance_mode("Dark")  
 customtkinter.set_default_color_theme("green")  
 
+def check_existence(email:str) -> bool:
+    flag: bool = False
+    if (email.endswith('@yahoo.com') == True) or (email.endswith("@hotmail.com") == True):
+        r = requests.get(f"https://api.validemail.net/?email={email}&token=54d0bb46f65a4c0d9894454021f14560")
+        re = r.json()
+        additional = re["EmailAdditionalInfo"]
+        if len(additional) > 1:
+            flag = True
+        elif re["IsValid"]:
+            flag = True
+
+    else:
+        api_lists = ["tQReT8Z7OINfadZ0qCv0N", "EWPfWcivWhA1T31WAJGfg", "hoq34RmyHE6Cqp9sQ0MYs"]
+        r = requests.get(f"https://apps.emaillistverify.com/api/verifEmail?secret={random.choice(api_lists)}&email={email}")
+        if "ok" in str(r.content):
+            flag = True
+
+    return flag
+    
+    
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -136,11 +155,11 @@ class App(customtkinter.CTk):
         
         self.textbox2.configure(state='normal')
         self.textbox2.delete('1.0', 'end')
-        self.textbox2.insert('end', f"Selected File: {file_path}\nThreads: {threads}\nDomain: {domain}\n")
+        self.textbox2.insert('end', f"Selected File: {file_path}")
         self.textbox2.insert('end', "----------------------\n \n")
         self.textbox3.configure(state='normal')
         self.textbox3.delete('1.0', 'end')
-        self.textbox3.insert('end', f"Selected File: {file_path}\nThreads: {threads}\nDomain: {domain}\n")
+        self.textbox3.insert('end', f"Selected File: {file_path}")
         self.textbox3.insert('end', "----------------------\n \n")
         self.textbox3.update_idletasks()
         def is_valid_email(email):
