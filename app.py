@@ -75,8 +75,8 @@ class App(customtkinter.CTk):
         self.textbox2.grid(row=1, column=1, padx=(25, 40), pady=(50, 0), sticky="nsew")
         self.textbox3 = customtkinter.CTkTextbox(self.tabview1.tab("Invalid Emails"), width=500, height=400, state='disabled', text_color="red")
         self.textbox3.grid(row=1, column=1, padx=(30, 25), pady=(50, 0), sticky="nsew")
-        self.valid_file_button = customtkinter.CTkButton(self.textbox2, text="Open Valid.txt in Explorer", command=lambda: open_in_explorer(self.selected_file_path2))
-        self.valid_file_button.grid(row=1, column=1, padx=(0, 150), pady=(0,1500))
+        self.valid_file_button = customtkinter.CTkButton(self.tabview1.tab("Valid Emails"), text="Open Valid.txt in Explorer", command=lambda: open_in_explorer(self.selected_file_path2))
+        self.valid_file_button.grid(row=1, column=1, padx=(0, 150), pady=(0,0))
         self.valid_file_button = customtkinter.CTkButton(self.textbox3, text="Open Invalid.txt in Explorer", command=lambda: open_in_explorer(self.selected_file_path3))
         self.valid_file_button.grid(row=1, column=1, padx=(0, 150), pady=(0,1500))
 
@@ -145,6 +145,12 @@ class App(customtkinter.CTk):
         if file_path:
             self.selected_file_path2 = file_path
 
+        self.textbox2.configure(state='normal')
+        self.textbox2.delete('1.0', 'end')
+        self.textbox2.insert('end', f"\n \n \n \n Valid.txt PATH --> {file_path} \n")
+        self.textbox2.insert('end', "----------------------\n \n")
+        self.textbox2.configure(state='disabled')
+
     def select_file3(self):
         file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
 
@@ -167,7 +173,7 @@ class App(customtkinter.CTk):
         
         self.textbox2.configure(state='normal')
         self.textbox2.delete('1.0', 'end')
-        # self.text.bind("<Button-1>", lambda event: open_file_explorer())
+        self.textbox2.insert('end', f"Selected (Username) File: {file_path} \n")
         self.textbox2.insert('end', "----------------------\n \n")
         self.textbox3.configure(state='normal')
         self.textbox3.delete('1.0', 'end')
