@@ -17,9 +17,9 @@ def check_existence(email:str) -> bool:
             flag = True
 
     else:
-        # api_lists = ["tQReT8Z7OINfadZ0qCv0N", "EWPfWcivWhA1T31WAJGfg", "hoq34RmyHE6Cqp9sQ0MYs"]
+        api_lists = ["tQReT8Z7OINfadZ0qCv0N", "EWPfWcivWhA1T31WAJGfg", "hoq34RmyHE6Cqp9sQ0MYs"]
 
-        api_lists = ''''' your list of apis here '''
+        # api_lists = ''''' your list of apis here '''
         r = requests.get(f"https://apps.emaillistverify.com/api/verifEmail?secret={random.choice(api_lists)}&email={email}")
         if "ok" in str(r.content):
             flag = True
@@ -178,28 +178,33 @@ class App(customtkinter.CTk):
         self.textbox3.insert('end', "----------------------------------------------------------------------------------------------------\n \n")
         self.textbox3.insert('end', "Output : \n \n")
         self.textbox3.update_idletasks()
+        with open(self.selected_file_path2, 'w') as valid_file:
+            valid_file.write('')
+        with open(self.selected_file_path3, 'w') as invalid_file:
+            invalid_file.write('')
         def is_valid_email(email):
             pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
             return re.match(pattern, email)
     
         for username in usernames:
-            if not is_valid_email(username):
-                validity = "Invalid email syntax"
-            else:
-                validity = check_existence(f'{username}')
-                # validity = False
-            if validity:
-                self.textbox2.insert('end', username + f" ::---------::> {validity}" + "\n", 'green_text')
-                self.progressbar_1.stop()
-                self.textbox2.update_idletasks()
-                with open(self.selected_file_path2, 'a') as valid_file:
-                    valid_file.write(str(username) + '\n')
-            else:
-                self.textbox3.insert('end', username + f" ::---------::> {validity}" + "\n",'red_text')
-                self.textbox3.update_idletasks()
-                with open(self.selected_file_path3, 'a') as invalid_file:
-                    invalid_file.write(str(username) + '\n')
-                
+            if username.endswith(f'{domain}'):
+                if not is_valid_email(username):
+                    validity = "Invalid email syntax"
+                else:
+                    validity = check_existence(f'{username}')
+                    # validity = False
+                if validity:
+                    self.textbox2.insert('end', username + f" ::---------::> {validity}" + "\n", 'green_text')
+                    self.progressbar_1.stop()
+                    self.textbox2.update_idletasks()
+                    with open(self.selected_file_path2, 'a') as valid_file:
+                        valid_file.write(str(username) + '\n')
+                else:
+                    self.textbox3.insert('end', username + f" ::---------::> {validity}" + "\n",'red_text')
+                    self.textbox3.update_idletasks()
+                    with open(self.selected_file_path3, 'a') as invalid_file:
+                        invalid_file.write(str(username) + '\n')
+                    
         self.textbox2.configure(state='disabled')
         self.textbox3.configure(state='disabled')
 
