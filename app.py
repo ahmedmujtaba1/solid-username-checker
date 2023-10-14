@@ -109,10 +109,10 @@ class App(customtkinter.CTk):
         photo_settings = customtkinter.CTkImage(light_image=light_image_settings)
         self.image_button_settings = customtkinter.CTkButton(self.tabview.tab("Settings"), text="Usernames(.txt)", image=photo_settings, compound="left", command=self.select_file)
         self.image_button_settings.grid(row=2, column=0, padx=20, pady=(10, 10))
-        self.image_button_settings = customtkinter.CTkButton(self.tabview.tab("Settings"), text="valid(.txt)", image=photo_settings, compound="left", command=self.select_file2)
-        self.image_button_settings.grid(row=3, column=0, padx=20, pady=(10, 10))
-        self.image_button_settings = customtkinter.CTkButton(self.tabview.tab("Settings"), text="invalid(.txt)", image=photo_settings, compound="left", command=self.select_file3)
-        self.image_button_settings.grid(row=4, column=0, padx=20, pady=(10, 10))
+        self.image_button_settings2 = customtkinter.CTkButton(self.tabview.tab("Settings"), text="valid(.txt)", image=photo_settings, compound="left", command=self.select_file2)
+        self.image_button_settings2.grid(row=3, column=0, padx=20, pady=(10, 10))
+        self.image_button_settings3 = customtkinter.CTkButton(self.tabview.tab("Settings"), text="invalid(.txt)", image=photo_settings, compound="left", command=self.select_file3)
+        self.image_button_settings3.grid(row=4, column=0, padx=20, pady=(10, 10))
         # self.selected_file_label = customtkinter.CTkLabel(self.tabview.tab("Settings"), text="  Usernames: None")
         # self.selected_file_label.grid(row=3, column=0, padx=20, pady=(0, 10))
 
@@ -138,45 +138,30 @@ class App(customtkinter.CTk):
 
         if file_path:
             self.selected_file_path = file_path
-
-        self.textbox2.configure(state='normal')
-        self.textbox2.insert('end', f"Selected File (USERNAMES.txt) --> {file_path} \n")
-        self.textbox2.configure(state='disabled')
-        self.textbox3.configure(state='normal')
-        self.textbox3.insert('end', f"Selected File (USERNAMES.txt) --> {file_path} \n")
-        self.textbox3.configure(state='disabled')
+            self.filename = os.path.basename(file_path)
+            self.image_button_settings.configure(text=self.filename)
+        
 
     def select_file2(self):
         file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
 
         if file_path:
             self.selected_file_path2 = file_path
-
-        self.textbox2.configure(state='normal')
-        self.textbox2.insert('end', f"Valid.txt PATH --> {file_path} \n")
-        self.textbox2.configure(state='disabled')
-        self.textbox3.configure(state='normal')
-        self.textbox3.insert('end', f"Valid.txt PATH --> {file_path} \n")
-        self.textbox3.configure(state='disabled')
+            self.filename = os.path.basename(file_path)
+            self.image_button_settings2.configure(text=self.filename)
 
     def select_file3(self):
         file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
 
         if file_path:
             self.selected_file_path3 = file_path
-
-        self.textbox2.configure(state='normal')
-        self.textbox2.insert('end', f"Invalid.txt PATH --> {file_path} \n")
-        self.textbox2.configure(state='disabled')
-        self.textbox3.configure(state='normal')
-        self.textbox3.insert('end', f"Invalid.txt PATH --> {file_path} \n")
-        self.textbox3.configure(state='disabled')
+            self.filename = os.path.basename(file_path)
+            self.image_button_settings3.configure(text=self.filename)
 
     def start_button(self):
         print("Valid File TXT Path : ", self.selected_file_path2)
         print("Invalid File TXT Path : ", self.selected_file_path3)
         self.progressbar_1.start()
-        file_path = rf"{self.selected_file_path}"
         threads = self.threads_entry.get()
         domain = self.domain_select.get()
         
