@@ -1,4 +1,4 @@
-import customtkinter, webbrowser, re, requests, random
+import customtkinter, webbrowser, re, requests, random, os
 from PIL import Image
 from tkinter import filedialog
 
@@ -17,6 +17,8 @@ def check_existence(email:str) -> bool:
             flag = True
 
     else:
+        # api_lists = ["tQReT8Z7OINfadZ0qCv0N", "EWPfWcivWhA1T31WAJGfg", "hoq34RmyHE6Cqp9sQ0MYs"]
+
         api_lists = ''''' your list of apis here '''
         r = requests.get(f"https://apps.emaillistverify.com/api/verifEmail?secret={random.choice(api_lists)}&email={email}")
         if "ok" in str(r.content):
@@ -63,10 +65,20 @@ class App(customtkinter.CTk):
         self.tabview1.tab("Invalid Emails").grid_columnconfigure(2, weight=10)
         # self.textbox = customtkinter.CTkTextbox(self.tabview1.tab("Output"), width=500, height=400, state='disabled', fg_color="green")
         # self.textbox.grid(row=1, column=1, padx=(0, 40), pady=(50, 0), sticky="nsew")
+        def open_in_explorer(file_path):
+            print("FILE pATH : ", file_path)
+            if file_path and os.path.exists(file_path):
+                file_path = os.path.abspath(file_path)
+                os.system(f'explorer "{file_path}"')
+
         self.textbox2 = customtkinter.CTkTextbox(self.tabview1.tab("Valid Emails"), width=500, height=400, state='disabled', text_color="green")
         self.textbox2.grid(row=1, column=1, padx=(25, 40), pady=(50, 0), sticky="nsew")
         self.textbox3 = customtkinter.CTkTextbox(self.tabview1.tab("Invalid Emails"), width=500, height=400, state='disabled', text_color="red")
         self.textbox3.grid(row=1, column=1, padx=(30, 25), pady=(50, 0), sticky="nsew")
+        self.valid_file_button = customtkinter.CTkButton(self.textbox2, text="Open Valid.txt in Explorer", command=lambda: open_in_explorer(self.selected_file_path2))
+        self.valid_file_button.grid(row=1, column=1, padx=(0, 150), pady=(0,1500))
+        self.valid_file_button = customtkinter.CTkButton(self.textbox3, text="Open Invalid.txt in Explorer", command=lambda: open_in_explorer(self.selected_file_path3))
+        self.valid_file_button.grid(row=1, column=1, padx=(0, 150), pady=(0,1500))
 
         self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
         self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
@@ -155,11 +167,11 @@ class App(customtkinter.CTk):
         
         self.textbox2.configure(state='normal')
         self.textbox2.delete('1.0', 'end')
-        self.textbox2.insert('end', f"Selected File: {file_path}")
+        # self.text.bind("<Button-1>", lambda event: open_file_explorer())
         self.textbox2.insert('end', "----------------------\n \n")
         self.textbox3.configure(state='normal')
         self.textbox3.delete('1.0', 'end')
-        self.textbox3.insert('end', f"Selected File: {file_path}")
+        self.textbox3.insert('end', f"Selected File: {file_path} \n")
         self.textbox3.insert('end', "----------------------\n \n")
         self.textbox3.update_idletasks()
         def is_valid_email(email):
