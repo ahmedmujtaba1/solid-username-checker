@@ -125,7 +125,7 @@ class App(customtkinter.CTk):
         self.domain_select.grid(row=0, column=0, padx=20, pady=(20, 10))
         self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Contact"), text="Github [@ahmedmujtaba1]")
         self.label_tab_2.grid(row=0, column=0, padx=20, pady=20)
-        self.label_tab_2.bind("<Button-1>", lambda event: webbrowser.open("https://github.com/AhmedMujtaba1"))
+        self.label_tab_2.bind("<Button-1>", lambda event: webbrowser.open("https://github.com/ahmedmujtaba1/solid-username-checker"))
 
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
