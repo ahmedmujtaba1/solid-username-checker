@@ -56,7 +56,7 @@ class App(customtkinter.CTk):
         self.tabview1 = customtkinter.CTkTabview(self, width=700)
         self.tabview1.grid(row=1, column=1, padx=(10, 0), pady=(20, 0), sticky="nsew")
         self.progressbar_1 = customtkinter.CTkProgressBar(self, width=450)
-        self.progressbar_1.grid(row=1, column=1, padx=(0, 0), pady=(0, 400))
+        self.progressbar_1.grid(row=1, column=1, padx=(50, 210), pady=(0, 400))
         # self.tabview1.add("Output")
         self.tabview1.add("Valid Emails")
         self.tabview1.add("Invalid Emails")
@@ -76,9 +76,9 @@ class App(customtkinter.CTk):
         self.textbox3 = customtkinter.CTkTextbox(self.tabview1.tab("Invalid Emails"), width=500, height=400, state='disabled', text_color="red")
         self.textbox3.grid(row=1, column=1, padx=(30, 25), pady=(50, 0), sticky="nsew")
         self.valid_file_button = customtkinter.CTkButton(self.tabview1.tab("Valid Emails"), text="Open Valid.txt in Explorer", command=lambda: open_in_explorer(self.selected_file_path2))
-        self.valid_file_button.grid(row=1, column=1, padx=(0, 150), pady=(0,0))
-        self.valid_file_button = customtkinter.CTkButton(self.textbox3, text="Open Invalid.txt in Explorer", command=lambda: open_in_explorer(self.selected_file_path3))
-        self.valid_file_button.grid(row=1, column=1, padx=(0, 150), pady=(0,1500))
+        self.valid_file_button.grid(row=1, column=1, padx=(400, 0), pady=(0,1400))
+        self.valid_file_button = customtkinter.CTkButton(self.tabview1.tab("Invalid Emails"), text="Open Invalid.txt in Explorer", command=lambda: open_in_explorer(self.selected_file_path3))
+        self.valid_file_button.grid(row=1, column=1, padx=(400, 0), pady=(0,1400))
 
         self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
         self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
@@ -139,6 +139,13 @@ class App(customtkinter.CTk):
         if file_path:
             self.selected_file_path = file_path
 
+        self.textbox2.configure(state='normal')
+        self.textbox2.insert('end', f"Selected File (USERNAMES.txt) --> {file_path} \n")
+        self.textbox2.configure(state='disabled')
+        self.textbox3.configure(state='normal')
+        self.textbox3.insert('end', f"Selected File (USERNAMES.txt) --> {file_path} \n")
+        self.textbox3.configure(state='disabled')
+
     def select_file2(self):
         file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
 
@@ -146,16 +153,24 @@ class App(customtkinter.CTk):
             self.selected_file_path2 = file_path
 
         self.textbox2.configure(state='normal')
-        self.textbox2.delete('1.0', 'end')
-        self.textbox2.insert('end', f"\n \n \n \n Valid.txt PATH --> {file_path} \n")
-        self.textbox2.insert('end', "----------------------\n \n")
+        self.textbox2.insert('end', f"Valid.txt PATH --> {file_path} \n")
         self.textbox2.configure(state='disabled')
+        self.textbox3.configure(state='normal')
+        self.textbox3.insert('end', f"Valid.txt PATH --> {file_path} \n")
+        self.textbox3.configure(state='disabled')
 
     def select_file3(self):
         file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
 
         if file_path:
             self.selected_file_path3 = file_path
+
+        self.textbox2.configure(state='normal')
+        self.textbox2.insert('end', f"Invalid.txt PATH --> {file_path} \n")
+        self.textbox2.configure(state='disabled')
+        self.textbox3.configure(state='normal')
+        self.textbox3.insert('end', f"Invalid.txt PATH --> {file_path} \n")
+        self.textbox3.configure(state='disabled')
 
     def start_button(self):
         print("Valid File TXT Path : ", self.selected_file_path2)
@@ -172,13 +187,11 @@ class App(customtkinter.CTk):
                 
         
         self.textbox2.configure(state='normal')
-        self.textbox2.delete('1.0', 'end')
-        self.textbox2.insert('end', f"Selected (Username) File: {file_path} \n")
-        self.textbox2.insert('end', "----------------------\n \n")
+        self.textbox2.insert('end', "----------------------------------------------------------------------------------------------------\n \n")
+        self.textbox2.insert('end', "Output : \n \n")
         self.textbox3.configure(state='normal')
-        self.textbox3.delete('1.0', 'end')
-        self.textbox3.insert('end', f"Selected File: {file_path} \n")
-        self.textbox3.insert('end', "----------------------\n \n")
+        self.textbox3.insert('end', "----------------------------------------------------------------------------------------------------\n \n")
+        self.textbox3.insert('end', "Output : \n \n")
         self.textbox3.update_idletasks()
         def is_valid_email(email):
             pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
