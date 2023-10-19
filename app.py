@@ -1,13 +1,50 @@
-import customtkinter, webbrowser, re, requests, random, os
+import customtkinter, webbrowser, re, requests, random, os, json
 from PIL import Image
+from email_validate import validate
 from tkinter import filedialog
 
 customtkinter.set_appearance_mode("Dark")  
 customtkinter.set_default_color_theme("green")  
 
+
+def outlook_checker(email : str) -> bool:
+    headers = {
+        'authority' : 'signup.live.com',
+        'method' : 'POST',
+        'path' : '/API/CheckAvailableSigninNames?lcid=1033&wa=wsignin1.0&rpsnv=16&ct=1697374912&rver=7.0.6738.0&wp=MBI_SSL&wreply=https%3a%2f%2foutlook.live.com%2fowa%2f%3fnlp%3d1%26signup%3d1%26cobrandid%3dab0455a0-8d03-46b9-b18b-df2f57b9e44c%26RpsCsrfState%3d4204f7c7-8309-bf03-41d8-afc7098e33b3&id=292841&CBCXT=out&lw=1&fl=dob%2cflname%2cwld&cobrandid=ab0455a0-8d03-46b9-b18b-df2f57b9e44c&lic=1&uaid=bd4f04e1be6743a5bbdd772ec21e283f',
+        'scheme' : 'https',
+        'Accept' : 'application/json',
+        'Accept-Encoding' : 'gzip, deflate, br',
+        'Cache-Control' : 'no-cache',
+        'Canary' : 'lDvQa5CsBb6yVklpGzJ3tKqGgvxmvYDiIPBbPZuo21tENCYeWuMA5T9Ej23nLsvsJooFbotUaRQqQlV8uN3UiZCGhAZLzciJOqJDDdwgTw9bKSX4oq/ykV8YMdLuI2d+NL1gokaCG8/82xIsB7ArRvYzmbM7caf46bltsjRb4gC1invq/nB8p+j7xN6s7Z5VeOR13bO2IKDGXogXGeKNHhA3Ra7A5xKNi276hJ9meSUdyPOxghQD3PGegMGSXI8A:2:3c',
+
+        # 'Accept-Language' : 'en-US,en;q=0.9',
+        'Content-Type' : 'application/json',
+        'Content-Length' : '150',
+        # 'Origin' : 'https://promoterkit.com',
+        # 'Referer' : 'https://promoterkit.com/tools/email/checker.aspx/ValidateEmail',
+        'Cookie' : 'MicrosoftApplicationsTelemetryDeviceId=9d2933a3-5863-4a8d-a8e6-1b53633dbab7; MUID=54f3c2fb1b4444dfaa99ae91b28e0350; MSFPC=GUID=f9ecddd83d0f454e9de0038743e9b691&HASH=f9ec&LV=202310&V=4&LU=1697201318786; amsc=qNSi7ymOfEcCsYp/EHHHvAM0O5ls59qoy8pn9ZmdtgVovSZZtfpWfNdJ3E47RJz9oKc1v8gQMh4vDr628ZzD4on/D2vhxyLDUqW6hLHMgQfeUsAn3WghojoD6xXkR14ZhrD9m8I1ELTvOSsxLNyO1ZHbc69MBedOh2I/yICUJcA8QEHhbSsu2wGkM3uVb0VOdj0WQHV1LzID7SmYishBIFYfGXIgugUN7+C1wCvdO+KUOVDbIAzRhirCWrwsxkwYl+cx+j8pOR49P2AMvJEk1YzkEjTpxklTn1mXom9+VkoNHwGB1N9cxuEDw+yxSdmW:2:3c; fptctx2=taBcrIH61PuCVH7eNCyH0J9Fjk1kZEyRnBbpUW3FKs%252fHBvH7FsNe%252fHNngZs4Nuom2oUgx8%252frch6X8dJs03aRL8vOrdOkJQ1RHUq2E46zBa6v0wnElbCUYyZhZTk5GijIcsggPGjktEJnLhhHbKbioG9SRpgmQ7spExmWrX0p8CVfX0ZXwFL7Mmbx0Ciat8T4R09THZP%252frMOpvf0gomsHdCQbwfsZMn%252fbakG04s8FRCnb400sqCYiaiYCx4%252f7Y%252fbrKy4IqR8Rnas%252fvuL8ZeWJCyegedMOGuFdqt7O4R1A9JW%252b3wfxIHaVa6mQ62lOjzFlYGj3cGyh2SqOqB%252fG2kXuwA%253d%253d; logonLatency=LGN01=638329717121443382; clrc={%2219646%22%3a[%22d7PFy/1V%22%2c%22+VC+x0R6%22%2c%22SLD3q8F4%22%2c%22eb4C4Wvc%22%2c%22PNVGSRqC%22]}; ai_session=CfcymzwFbvdp128ayRKZ0L|1697374922656|1697374922656; arp_scroll_position=180',
+        # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+    }
+
+    formdata = {
+        'hpgid' : '200639',
+        'includeSuggestions' : True,
+        'scid' : '100118',
+        'signInName' : f'{email}',
+        'uaid' : 'bd4f04e1be6743a5bbdd772ec21e283f',
+        'uiflvr' : '1001',
+    }
+
+    json_data = json.dumps(formdata)
+
+    r = requests.post("https://signup.live.com/API/CheckAvailableSigninNames?lcid=1033&wa=wsignin1.0&rpsnv=16&ct=1697374912&rver=7.0.6738.0&wp=MBI_SSL&wreply=https%3a%2f%2foutlook.live.com%2fowa%2f%3fnlp%3d1%26signup%3d1%26cobrandid%3dab0455a0-8d03-46b9-b18b-df2f57b9e44c%26RpsCsrfState%3d4204f7c7-8309-bf03-41d8-afc7098e33b3&id=292841&CBCXT=out&lw=1&fl=dob%2cflname%2cwld&cobrandid=ab0455a0-8d03-46b9-b18b-df2f57b9e44c&lic=1&uaid=bd4f04e1be6743a5bbdd772ec21e283f", headers=headers, data=json_data)
+    res = r.json()
+    return res["isAvailable"]
+
 def check_existence(email:str) -> bool:
     flag: bool = False
-    if (email.endswith('@yahoo.com') == True) or (email.endswith("@hotmail.com") == True):
+    if (email.endswith('@yahoo.com') == True):
         r = requests.get(f"https://api.validemail.net/?email={email}&token=54d0bb46f65a4c0d9894454021f14560")
         re = r.json()
         additional = re["EmailAdditionalInfo"]
@@ -16,10 +53,34 @@ def check_existence(email:str) -> bool:
         elif re["IsValid"]:
             flag = True
 
+    elif (email.endswith('@gmail.com') == True):
+        valid  = validate(
+            email_address=email.lower(),
+            check_format=True,
+            # check_smtp=True,
+            check_dns=True
+        )
+        if valid:
+            flag = True
+
+        elif not valid:
+            valid  = validate(
+                email_address=email.lower(),
+                check_format=True,
+                check_smtp=True,
+                # check_dns=True
+            )
+            if valid:
+                flag = True
+
+    elif (email.endswith('@hotmail.com') == True) or (email.endswith('@outlook.com') == True):
+        res = outlook_checker(email=email)
+        if not res:
+            flag = True
+
     else:
         api_lists = ["tQReT8Z7OINfadZ0qCv0N", "EWPfWcivWhA1T31WAJGfg", "hoq34RmyHE6Cqp9sQ0MYs"]
 
-        # api_lists = ''''' your list of apis here '''
         r = requests.get(f"https://apps.emaillistverify.com/api/verifEmail?secret={random.choice(api_lists)}&email={email}")
         if "ok" in str(r.content):
             flag = True
@@ -121,7 +182,7 @@ class App(customtkinter.CTk):
         self.selected_file_path = None
         self.threads_entry.configure(validate="key", validatecommand=(self.validate_number, "%P"))
         self.domain_select = customtkinter.CTkOptionMenu(self.tabview.tab("Settings"), dynamic_resizing=False,
-                                                        values=["@gmail.com","@yahoo.com","@mail.com","@hotmail.com","@gmx.com"])
+                                                        values=["@gmail.com","@yahoo.com","@mail.com","@hotmail.com","@gmx.com", "@outlook.com", "@aol.com"])
         self.domain_select.grid(row=0, column=0, padx=20, pady=(20, 10))
         self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Contact"), text="Github [@ahmedmujtaba1]")
         self.label_tab_2.grid(row=0, column=0, padx=20, pady=20)
@@ -172,9 +233,11 @@ class App(customtkinter.CTk):
                 
         
         self.textbox2.configure(state='normal')
+        self.textbox2.delete('1.0', 'end')
         self.textbox2.insert('end', "----------------------------------------------------------------------------------------------------\n \n")
         self.textbox2.insert('end', "Output : \n \n")
         self.textbox3.configure(state='normal')
+        self.textbox3.delete('1.0', 'end')
         self.textbox3.insert('end', "----------------------------------------------------------------------------------------------------\n \n")
         self.textbox3.insert('end', "Output : \n \n")
         self.textbox3.update_idletasks()
@@ -185,26 +248,60 @@ class App(customtkinter.CTk):
         def is_valid_email(email):
             pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
             return re.match(pattern, email)
+        
+        valid_emails = []
+        invalid_emails = []
+
+        # Process each username and check its validity and existence
+        remaining_emails = []  # List to store remaining emails
     
         for username in usernames:
+            email_full = f"{username}{domain}"
+            username_w = username.split(domain)[0]
             if username.endswith(f'{domain}'):
                 if not is_valid_email(username):
                     validity = "Invalid email syntax"
+                    invalid_emails.append(username)
                 else:
                     validity = check_existence(f'{username}')
+                    print(username + f" : {validity}" + f" {type(validity)}")
                     # validity = False
-                if validity:
-                    self.textbox2.insert('end', username + f" ::---------::> {validity}" + "\n", 'green_text')
-                    self.progressbar_1.stop()
-                    self.textbox2.update_idletasks()
-                    with open(self.selected_file_path2, 'a') as valid_file:
-                        valid_file.write(str(username) + '\n')
-                else:
-                    self.textbox3.insert('end', username + f" ::---------::> {validity}" + "\n",'red_text')
-                    self.textbox3.update_idletasks()
-                    with open(self.selected_file_path3, 'a') as invalid_file:
-                        invalid_file.write(str(username) + '\n')
+                    # if (domain == "@hotmail.com") or (domain == "@outlook.com"):
+                    #     if (validity == False):
+                    #         self.textbox3.insert('end', username + "\n",'red_text')
+                    #         self.textbox3.update_idletasks()
+                    #         invalid_emails.append(username)
+                    #         with open(self.selected_file_path3, 'a') as invalid_file:
+                    #             invalid_file.write(str(username) + '\n')
+                    #     else:
+                            
+                    #         self.textbox2.insert('end', username + "\n", 'green_text')
+                    #         self.textbox2.update_idletasks()
+                    #         valid_emails.append(username)
+                    #         with open(self.selected_file_path2, 'a') as valid_file:
+                    #             valid_file.write(str(username) + '\n')
                     
+                    if (validity == False):
+                        self.textbox2.insert('end', username + "\n",'red_text')
+                        self.textbox2.update_idletasks()
+                        valid_emails.append(username)
+                        with open(self.selected_file_path2, 'a') as invalid_file:
+                            invalid_file.write(str(username_w) + '\n')
+                    else:
+                        
+                        self.textbox3.insert('end', username + "\n", 'green_text')
+                        self.textbox3.update_idletasks()
+                        invalid_emails.append(username)
+                        with open(self.selected_file_path3, 'a') as valid_file:
+                            valid_file.write(str(username_w) + '\n')
+                    # Extract remaining emails using list comprehension
+                    remaining_emails = [f"{email}" for email in usernames if f"{email}" not in valid_emails and f"{email}" not in invalid_emails]
+                    # print("[+] Remaining Emails  : ", remaining_emails)
+                    # Overwrite the original file with remaining emails
+                    with open(self.selected_file_path, 'w') as file:
+                        file.write('\n'.join(remaining_emails))
+                            
+                        
         self.textbox2.configure(state='disabled')
         self.textbox3.configure(state='disabled')
 
