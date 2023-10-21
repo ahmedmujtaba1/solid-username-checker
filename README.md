@@ -2,7 +2,7 @@
 
 GitHub Username Checker is a simple tool for verifying the existence of an email address.
 
-![GitHub Username Checker UI](https://www.linkpicture.com/q/ui_1.jpg)
+![GitHub Username Checker UI](ui.jpg)
 
 ## Features
 
