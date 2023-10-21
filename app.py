@@ -1,6 +1,7 @@
 import customtkinter, webbrowser, re, requests, random, os, json
 from PIL import Image
 from email_validate import validate
+from verify_email import verify_email
 from tkinter import filedialog
 
 customtkinter.set_appearance_mode("Dark")  
@@ -54,22 +55,13 @@ def check_existence(email:str) -> bool:
             flag = True
 
     elif (email.endswith('@gmail.com') == True):
-        valid  = validate(
-            email_address=email.lower(),
-            check_format=True,
-            # check_smtp=True,
-            check_dns=True
-        )
-        if valid:
+        
+        if verify_email(email):
             flag = True
-
-        elif not valid:
+        else:
             valid  = validate(
                 email_address=email.lower(),
-                check_format=True,
-                check_smtp=True,
-                # check_dns=True
-            )
+                check_format=True,            )
             if valid:
                 flag = True
 
