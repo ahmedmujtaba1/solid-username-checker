@@ -12,12 +12,20 @@
 
 # print(validate_email(email="HikingAdventures@gmail.com", verify=True))
 
-# from verify_email import verify_email
-# from email_validate import validate
+from verify_email import verify_email
+from email_validate import validate_or_fail
 
-email = "johnsmith@gmail.com".lower()
-# print(validate(email))
-import requests
+print(validate_or_fail("rustomdeveloper@gmail.com",check_dns=False, check_smtp=False, check_format=False, check_blacklist=True))
 
-r = requests.get(f"https://hunter.io/verify/rustomdeveloper@gmail.com", timeout=110)
-print(r.content)
+# email = "johnsmith@gmail.com".lower()
+# # print(validate(email))
+# import requests, json
+
+# formdata1 = {
+#     "emails" : "khizranmohsi22n%40gmail.com",
+# }
+
+# formdata = json.dumps(formdata1)
+
+# r = requests.post("https://www.site24x7.com/tools/email-validator", data=formdata)
+# print(r.content)
