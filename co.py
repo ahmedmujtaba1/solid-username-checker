@@ -14,9 +14,11 @@
 
 from verify_email import verify_email
 from email_validate import validate_or_fail
+import emailcheck
+
+# print(validate_or_fail("rustomdeveloper@gmail.com",check_dns=False, check_smtp=False, check_format=False, check_blacklist=True))
 
 
-print(validate_or_fail("rustomdeveloper@gmail.com",check_dns=False, check_smtp=False, check_format=False, check_blacklist=True))
 
 # email = "johnsmith@gmail.com".lower()
 # # print(validate(email))
