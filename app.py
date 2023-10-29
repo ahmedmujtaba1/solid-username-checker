@@ -3,6 +3,7 @@ from PIL import Image
 from email_validate import validate
 from verify_email import verify_email
 from tkinter import filedialog
+from GmailChecker import GmailChecker
 
 customtkinter.set_appearance_mode("Dark")  
 customtkinter.set_default_color_theme("green")  
@@ -118,16 +119,10 @@ def check_existence(email:str) -> bool:
             flag = True
 
     elif (email.endswith('@gmail.com') == True):
-        
-        if verify_email(email):
+        check = GmailChecker.verify('skjdldkdlkd@gmail.com', 1)
+        if "Unregistered" in str(check):
             flag = True
-        else:
-            valid  = validate(
-                email_address=email.lower(),
-                check_format=True,            )
-            if valid:
-                flag = True
-
+        
     elif (email.endswith('@hotmail.com') == True) or (email.endswith('@outlook.com') == True):
         res = outlook_checker(email=email)
         if not res:
