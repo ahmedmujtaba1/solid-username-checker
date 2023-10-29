@@ -36,52 +36,71 @@ import json
 import re
 from bs4 import BeautifulSoup
 
-headers = {'UserAgent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36'}
+def userExists(username, s):
+    print("Checking the availability of {}".format(username))
+    link = 'https://login.yahoo.com/account/create?.intl=us&.lang=en-US&src=ym&activity=ybar-mail&pspid=2023538075&.done=https%3A%2F%2Fmail.yahoo.com%2Fd%3Fpspid%3D2023538075%26activity%3Dybar-mail&specId=yidReg&done=https%3A%2F%2Fmail.yahoo.com%2Fd%3Fpspid%3D2023538075%26activity%3Dybar-mail'
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Safari/537.36'
+    }
+    try:
+        resp = s.get(link, headers=headers).text
+    except:
+        print("Failed to open {}".format(link))
+        return None
+    specData = re.findall(r'value="(.*?)" name="specData"', resp)[0]
+    crumb = re.findall(r'value="(.*?)" name="crumb"', resp)[0]
+    acrumb = re.findall(r'value="(.*?)" name="acrumb"', resp)[0]
+    sessionIndex = re.findall(r'value="(.*?)" name="sessionIndex"', resp)[0]
+    link = "https://login.yahoo.com/account/module/create?validateField=yid"
+    headers = {
+        'Referer': 'https://login.yahoo.com/account/create?.intl=us&.lang=en-US&src=ym&activity=ybar-mail&pspid=2023538075&.done=https%3A%2F%2Fmail.yahoo.com%2Fd%3Fpspid%3D2023538075%26activity%3Dybar-mail&specId=yidReg&done=https%3A%2F%2Fmail.yahoo.com%2Fd%3Fpspid%3D2023538075%26activity%3Dybar-mail',
+        'sec-ch-ua': '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
+        'sec-ch-ua-mobile': '?0',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36',
+        'X-Requested-With': 'XMLHttpRequest',
+    }
+    data = {
+        'browser-fp-data': '{"language":"en-US","colorDepth":24,"deviceMemory":8,"pixelRatio":1,"hardwareConcurrency":4,"timezoneOffset":-360,"timezone":"Asia/Dhaka","sessionStorage":1,"localStorage":1,"indexedDb":1,"openDatabase":1,"cpuClass":"unknown","platform":"Win32","doNotTrack":"1","plugins":{"count":3,"hash":"e43a8bc708fc490225cde0663b28278c"},"canvas":"canvas winding:yes~canvas","webgl":1,"webglVendorAndRenderer":"Google Inc. (Intel)~ANGLE (Intel, Intel(R) HD Graphics 520 Direct3D11 vs_5_0 ps_5_0, D3D11-20.19.15.4380)","adBlock":0,"hasLiedLanguages":0,"hasLiedResolution":0,"hasLiedOs":0,"hasLiedBrowser":0,"touchSupport":{"points":0,"event":0,"start":0},"fonts":{"count":49,"hash":"411659924ff38420049ac402a30466bc"},"audio":"124.04347527516074","resolution":{"w":"1366","h":"768"},"availableResolution":{"w":"728","h":"1366"},"ts":{"serve":1624081774716,"render":1624081773747}}',
+        'specId': 'yidregsimplified',
+        'cacheStored': '',
+        'crumb': crumb,
+        'acrumb': acrumb,
+        'sessionIndex': sessionIndex,
+        'done': 'https://mail.yahoo.com/d?pspid=2023538075&activity=ybar-mail',
+        'googleIdToken': '',
+        'authCode': '',
+        'attrSetIndex': '0',
+        'specData': specData,
+        'multiDomain': '',
+        'tos0': 'oath_freereg|us|en-US',
+        'firstName': '',
+        'lastName': '',
+        'userid-domain': 'yahoo',
+        'userId': username,
+        'password': '',
+        'phone': '',
+        'mm': '',
+        'dd': '',
+        'yyyy': '',
+        'signup': '',
+    }
+    try:
+        resp = s.post(link, headers=headers, data=data).json()
+    except:
+        print("Failed to open {}".format(link))
+        return None
+    # print(resp)
+    all_errors = resp.get('errors', [])
+    if len(all_errors) == 0:
+        return None
+    for errors in all_errors:
+        if errors.get('name') == "userId":
+            # print(errors.get('error'))
+            return True
+    return False
 
-email_list = []
-
-def color(col):
-	if col == 'yellow':
-		return '\033[93m'
-	if col == 'red':
-		return '\033[91m'
-	if col == 'green':
-		return '\033[32m'
-	if col == 'cyan':
-		return '\033[36m'
-	if col == 'magenta':
-		return '\033[35m'
-	if col == 'end':
-		return '\033[0m'
-
-mail_status = {'0': color('red')+'[-] Email is already use!'+color('end'), '1': color('green')+'[+] Email is available!  '+color('end')}
-
-def yahoo_session():
-	global acrumb, crumb, yahoo_cookie
-	headers['X-Requested-With'] = 'XMLHttpRequest'
-	sess_url = 'https://login.yahoo.com/account/module/create?specId=yidReg'
-	response = requests.get(sess_url, timeout = 3, stream = False, verify = False)
-	soup = BeautifulSoup(response.content, "html.parser")
-	crumb = soup.find_all('input',{'name':'crumb'})[0].get('value')
-	acrumb = soup.find_all('input',{'name':'acrumb'})[0].get('value')
-	yahoo_cookie = response.cookies.get_dict()
-	print("Cookie : ",yahoo_cookie)
-
-def yahoo_check(email):
-	global payload, req
-	headers['X-Requested-With'] = 'XMLHttpRequest'
-	headers['Content-Type'] = 'application/x-www-form-urlencoded'
-	check_url = 'https://login.yahoo.com/account/module/create?validateField=userId'
-	payload = 'specId=yidregsimplified&crumb='+crumb+'&acrumb='+acrumb+'&sessionIndex=Qg--'+'&userid-domain=yahoo'+'&userId='+str(email)
-	print(color('yellow') + "Payload : ", payload + color('end'))
-	req = requests.post(check_url, data=payload, headers=headers, cookies=yahoo_cookie)
-	status = req.content
-	print("Status : ",status)
-	if 'IDENTIFIER_EXISTS' in status:
-		print(mail_status.get('0'), 'Domain: yahoo.com')
-		email_list.append(email+'@yahoo.com')
-	else:
-		print(mail_status.get('1'), 'Domain: yahoo.com')
-		
-yahoo_session()
-print(yahoo_check("ahmed"))
+s = requests.Session()
+print(userExists(username="aksjkjskslsks", s=s))
