@@ -71,9 +71,10 @@ def yahoo_check(email):
 	global payload, req
 	headers['X-Requested-With'] = 'XMLHttpRequest'
 	headers['Content-Type'] = 'application/x-www-form-urlencoded'
-	check_url = 'https://login.yahoo.com/account/module/create?validateField=yid'
-	payload = 'specId=yidreg&crumb='+crumb+'&acrumb='+acrumb+'&yid='+email
-	req = requests.post(check_url, data = payload, timeout = 3, stream = False, verify = False, headers = headers, cookies = yahoo_cookie)
+	check_url = 'https://login.yahoo.com/account/module/create?validateField=userId'
+	payload = 'specId=yidregsimplified&crumb='+crumb+'&acrumb='+acrumb+'&sessionIndex=Qg--'+'&userid-domain=yahoo'+'&userId='+str(email).split('@')[0]
+	print(color('yellow') + "Payload : ", payload + color('end'))
+	req = requests.post(check_url, data=payload, headers=headers, cookies=yahoo_cookie)
 	status = req.content
 	print("Status : ",status)
 	if 'IDENTIFIER_EXISTS' in status:
