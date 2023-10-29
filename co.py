@@ -72,7 +72,7 @@ def yahoo_check(email):
 	headers['X-Requested-With'] = 'XMLHttpRequest'
 	headers['Content-Type'] = 'application/x-www-form-urlencoded'
 	check_url = 'https://login.yahoo.com/account/module/create?validateField=userId'
-	payload = 'specId=yidregsimplified&crumb='+crumb+'&acrumb='+acrumb+'&sessionIndex=Qg--'+'&userid-domain=yahoo'+'&userId='+str(email).split('@')[0]
+	payload = 'specId=yidregsimplified&crumb='+crumb+'&acrumb='+acrumb+'&sessionIndex=Qg--'+'&userid-domain=yahoo'+'&userId='+str(email)
 	print(color('yellow') + "Payload : ", payload + color('end'))
 	req = requests.post(check_url, data=payload, headers=headers, cookies=yahoo_cookie)
 	status = req.content
@@ -84,4 +84,4 @@ def yahoo_check(email):
 		print(mail_status.get('1'), 'Domain: yahoo.com')
 		
 yahoo_session()
-print(yahoo_check("ahmed@yahoo.com"))
+print(yahoo_check("ahmed"))
