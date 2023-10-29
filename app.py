@@ -110,6 +110,20 @@ def userExists(username, s):
             return True
     return False
 
+def verify(email, ouputAlive = None):
+	url = "https://mail.google.com/mail/gxlu?email={}".format(email)
+	headers = {
+		"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+	}
+	resp_headers = requests.get(url=url, headers=headers).headers
+	if "Set-Cookie" in resp_headers:
+		if ouputAlive == 1:
+			return "Alive"
+		else:
+			pass
+	else:
+		return "Unregistered"
+
 def check_existence(email:str) -> bool:
     flag: bool = False
     if (email.endswith('@yahoo.com') == True):
@@ -119,7 +133,8 @@ def check_existence(email:str) -> bool:
             flag = True
 
     elif (email.endswith('@gmail.com') == True):
-        check = GmailChecker.verify('skjdldkdlkd@gmail.com', 1)
+        check = verify(email, 1)
+        print(f'{email} : ', check )
         if "Unregistered" in str(check):
             flag = True
         
