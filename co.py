@@ -65,6 +65,7 @@ def yahoo_session():
 	crumb = soup.find_all('input',{'name':'crumb'})[0].get('value')
 	acrumb = soup.find_all('input',{'name':'acrumb'})[0].get('value')
 	yahoo_cookie = response.cookies.get_dict()
+	print("Cookie : ",yahoo_cookie)
 
 def yahoo_check(email):
 	global payload, req
@@ -74,7 +75,7 @@ def yahoo_check(email):
 	payload = 'specId=yidreg&crumb='+crumb+'&acrumb='+acrumb+'&yid='+email
 	req = requests.post(check_url, data = payload, timeout = 3, stream = False, verify = False, headers = headers, cookies = yahoo_cookie)
 	status = req.content
-	print(status)
+	print("Status : ",status)
 	if 'IDENTIFIER_EXISTS' in status:
 		print(mail_status.get('0'), 'Domain: yahoo.com')
 		email_list.append(email+'@yahoo.com')
