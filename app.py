@@ -129,6 +129,12 @@ def check_existence(email:str) -> bool:
         if check:
             flag = True
 
+    elif (email.endswith('@aol.com') == True):
+        s = requests.Session()
+        check = userExists(username=email.split('@')[0], s=s)
+        if check:
+            flag = True
+
     elif (email.endswith('@gmail.com') == True):
         check = verify(email, 1)
         print(f'{email} : ', check )
