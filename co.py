@@ -1,4 +1,3 @@
-
 import requests
 import json
 import re
@@ -65,6 +64,7 @@ from verify_email import verify_email
 #              get_cookie()
 #              check(email)
 
-     
+
 # print(check("rustomdeveloper@gmai"))
+
 

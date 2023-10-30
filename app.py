@@ -1,9 +1,6 @@
 import customtkinter, webbrowser, re, requests, random, os, json
 from PIL import Image
-from email_validate import validate
-from verify_email import verify_email
 from tkinter import filedialog
-from GmailChecker import GmailChecker
 
 customtkinter.set_appearance_mode("Dark")  
 customtkinter.set_default_color_theme("green")  
@@ -144,7 +141,7 @@ def check_existence(email:str) -> bool:
             flag = True
 
     else:
-        api_lists = ["tQReT8Z7OINfadZ0qCv0N", "EWPfWcivWhA1T31WAJGfg", "hoq34RmyHE6Cqp9sQ0MYs"]
+        api_lists = ["Hr5OEWWwjWvZfA46cTFEf", "t3DEMdZa996KCs2rpENLS"]
 
         r = requests.get(f"https://apps.emaillistverify.com/api/verifEmail?secret={random.choice(api_lists)}&email={email}")
         if "ok" in str(r.content):
