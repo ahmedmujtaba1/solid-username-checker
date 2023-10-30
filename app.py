@@ -147,7 +147,7 @@ def check_existence(email:str) -> bool:
             flag = True
 
     else:
-        api_lists = ["Hr5OEWWwjWvZfA46cTFEf", "t3DEMdZa996KCs2rpENLS", "dBOkerlYKvA5cmmgUP2Uo"]
+        api_lists = ["Hr5OEWWwjWvZfA46cTFEf", "t3DEMdZa996KCs2rpENLS", "dBOkerlYKvA5cmmgUP2Uo", "8zxYLgDDoVC0lsGgVRlIG", "BwiiAn42GpmZVP0yC6jAq", "bADcih0m3uMOl2A3S2CTs", "KzdlBghoZQtu67Fes2JgF", "1oAkRs4p3a4XipRR8DNZt", ""]
 
         r = requests.get(f"https://apps.emaillistverify.com/api/verifEmail?secret={random.choice(api_lists)}&email={email}")
         if "ok" in str(r.content):
