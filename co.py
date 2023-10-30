@@ -66,4 +66,4 @@ def check(email):
              check(email)
 
      
-print(check("rustomdeveloper"))
+print(check("rustomdeveloper@gmail.com"))
