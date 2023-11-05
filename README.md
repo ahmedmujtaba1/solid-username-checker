@@ -15,8 +15,10 @@ GitHub Username Checker is a straightforward tool for verifying the existence of
 To use GitHub Username Checker, follow these simple steps:
 
 1. **Clone this Repository**: Begin by cloning this repository to your local machine using the following command:
+
    ```bash
    git clone https://github.com/ahmedmujtaba1/solid-username-checker.git
+
 
 2. **Run the application**: Begin by clicking the `build` directory and click the application
 
